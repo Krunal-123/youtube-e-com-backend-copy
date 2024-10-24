@@ -150,7 +150,7 @@ app.post('/signup', async (req, res) => {
             let { id, cookies } = req.body
             let decode = jwt.verify(cookies.token, process.env.JWT_SECRET)
             let check = await user.find({ email: decode })
-            await user.updateOne({ email: decode }, { $push: { addcart: id } })
+            await user.updateOne({ email: "parmarkrunal462@gmail.com" }, { $push: { addcart: id } })
             res.send(check)
         } catch (error) {
             console.log(error);
@@ -161,7 +161,7 @@ app.post('/signup', async (req, res) => {
         try {
             let { cookies } = req.body
             let decode = jwt.verify(cookies.token, process.env.JWT_SECRET)
-            let User = await user.find({ email:"krunaliparmar246@gmail.com" }).populate("addcart").populate("myitems").populate("myfavourites").populate('orderhistory.id')
+            let User = await user.find({ email:"parmarkrunal462@gmail.com" }).populate("addcart").populate("myitems").populate("myfavourites").populate('orderhistory.id')
             res.send(User)
         } catch (error) {
             console.log(error);
