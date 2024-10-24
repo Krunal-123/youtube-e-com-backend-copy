@@ -1,47 +1,40 @@
-const mongoose = require('mongoose')
-const express = require('express')
-const app = express()
-const user = require('./models/user')
-const cards = require("./models/cards")
-const UserDetails = require("./models/UserDetails")
-const cors = require('cors')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const mongoose=require('mongoose')
+const express=require('express')
+const app=express()
+const user=require('./models/user')
+const cards=require("./models/cards")
+const UserDetails=require("./models/UserDetails")
+const cors=require('cors')
+const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 require("dotenv").config();
 const Razorpay = require("razorpay");
 const sendOtpEmail = require('./mailer');
-const signupMail = require('./SignupMail')
+const signupMail =require('./SignupMail')
 
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173'], // Change to your frontend URL
     methods: ["POST", "GET", "DELETE", "PATCH"],
     credentials: true
-}))
+}));
 
-app.use(express.json())
-app.use(cookieParser())
-// middlewares
-app.use(express.json({ extended: false }));
-
+app.use(express.json());
+app.use(cookieParser());
 
 async function main() {
-    await mongoose.connect(process.env.DB).then((data) => {
-        console.log("connected port 3000");
-    }).catch(() => console.log("Connection Port 3000 Failed TRY Again")
-    )
+    await mongoose.connect(process.env.DB)
+      .then(() => console.log("Connected to database"))
+      .catch((err) => console.log("Connection failed", err));
 }
-main()
+main();
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-
-
-// Server-side (Node.js) code to create Razorpay order
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_SECRET,
 });
 
+// Create Razorpay order
 app.post("/create-order", async (req, res) => {
     const { amount } = req.body;
     const options = {
@@ -57,44 +50,37 @@ app.post("/create-order", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-// LOGIN
+
+// Login API with cookie handling
 app.post('/login', async (req, res) => {
     try {
-        let { email, password, remember } = req.body
-        let User = await user.findOne({ email })
-        if (User == null) {
-            return res.send('Invalid credentials') //If email invalid
+        const { email, password, remember } = req.body;
+        const User = await user.findOne({ email });
+        if (!User) return res.status(401).send('Invalid credentials');
+
+        const isMatch = await bcrypt.compare(password, User.password);
+        if (isMatch) {
+            const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '28d' });
+
+            const cookieOptions = {
+                path: '/',
+                maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
+                sameSite: 'None',
+                secure: true, // true for production (HTTPS)
+                httpOnly: true
+            };
+
+            res.cookie('token', token, cookieOptions).send('ok');
+        } else {
+            res.status(401).send('Invalid credentials');
         }
-        bcrypt.compare(password, User.password).then((result, err) => {
-            if (result) {
-                if (remember == "remember") {
-                    let token = jwt.sign(email, process.env.JWT_SECRET)
-                    return res.cookie('token', token, {
-                        path: 'http://localhost:5173',
-                        maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days in milliseconds
-                        sameSite: 'None',
-                        secure: true, // true for production with HTTPS, false for local development
-                        httpOnly: true, // optional: prevents JavaScript from accessing the cookie
-                    }).send('ok')
-                }
-                else {
-                    let token = jwt.sign(email, process.env.JWT_SECRET)
-                    return res.cookie('token', token, {
-                        path: 'http://localhost:5173',
-                        sameSite: 'None',
-                        secure: true, // true for production with HTTPS, false for local development
-                        httpOnly: true, // optional: prevents JavaScript from accessing the cookie
-                    }).send('ok')
-                }
-            }
-            else {
-                return res.send('Invalid credentials')
-            }
-        })
     } catch (error) {
         console.log(error);
+        res.status(500).send('Server error');
     }
-})
+});
+
+
 // SIGN UP
 app.post('/signup', async (req, res) => {
     try {
