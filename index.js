@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
                 if (remember == "remember") {
                     let token = jwt.sign(email, process.env.JWT_SECRET)
                     return res.cookie('token', token, {
-                        path: '/',
+                        path: 'http://localhost:5173',
                         maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days in milliseconds
                         sameSite: 'None',
                         secure: true, // true for production with HTTPS, false for local development
@@ -80,7 +80,7 @@ app.post('/login', async (req, res) => {
                 else {
                     let token = jwt.sign(email, process.env.JWT_SECRET)
                     return res.cookie('token', token, {
-                        path: '/',
+                        path: 'http://localhost:5173',
                         sameSite: 'None',
                         secure: true, // true for production with HTTPS, false for local development
                         httpOnly: true, // optional: prevents JavaScript from accessing the cookie
