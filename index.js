@@ -71,7 +71,7 @@ app.post('/login',async(req,res)=>{
                         let token=jwt.sign(email,process.env.JWT_SECRET)
                         return res.cookie('token',token,{ 
                             maxAge: 28 * 24 * 60 * 60 * 1000,
-                            httpOnly: true,
+                            httpOnly: false,
                             sameSite: 'None', // For cross-origin cookies, SameSite must be 'None'
                             secure: true, // Secure must be true if you're using HTTPS
                          }).send('ok')
@@ -79,7 +79,7 @@ app.post('/login',async(req,res)=>{
                     else{
                         let token=jwt.sign(email,process.env.JWT_SECRET)
                         return res.cookie('token',token,{
-                            httpOnly: true,
+                            httpOnly: false,
                             sameSite: 'None', // For cross-origin cookies, SameSite must be 'None'
                             secure: true, // Secure must be true if you're using HTTPS
                           }).send('ok')
