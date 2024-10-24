@@ -67,7 +67,8 @@ app.post('/login', async (req, res) => {
                 maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
                 sameSite: 'None',
                 secure: false, // true for production (HTTPS)
-                httpOnly: false
+                httpOnly: false,
+                domain: 'localhost' // Change this to your desired domain
             };
 
             res.cookie('token', token, cookieOptions).send('ok');
