@@ -63,12 +63,10 @@ app.post('/login', async (req, res) => {
             const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '28d' });
 
             const cookieOptions = {
-                path: '/',
                 maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
-                sameSite: 'None',
+                sameSite: 'Lax',
                 secure: true, // true for production (HTTPS)
                 httpOnly: false,
-                domain: 'localhost' // Change this to your desired domain
             };
 
             res.cookie('token', token, cookieOptions).send('ok');
