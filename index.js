@@ -64,7 +64,7 @@ app.post('/login', async (req, res) => {
 
             const cookieOptions = {
                 maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
-                sameSite: 'Lax',
+                sameSite: 'Strict',
                 secure: true, // true for production (HTTPS)
                 httpOnly: false,
             };
