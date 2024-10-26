@@ -65,7 +65,7 @@ app.post('/login', async (req, res) => {
                 return res.cookie('token', token, {
                     domain:'localhost',
                     httpOnly: false,
-                    secure: false,
+                    secure: true,
                     sameSite: 'None',
                     path: '/',  // Cookie is available only for URLs starting with /user
                     maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
@@ -75,7 +75,7 @@ app.post('/login', async (req, res) => {
                 return res.cookie('token', token, {
                     domain:'localhost',
                     httpOnly: false,
-                    secure: false,
+                    secure: true,
                     sameSite: 'None',
                     path: '/',  // Cookie is available only for URLs starting with /user
                 }).send('ok')
