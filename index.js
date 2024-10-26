@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
                     domain:'localhost',
                     httpOnly: false,
                     secure: true,
-                    sameSite: 'None',
+                    sameSite: 'none',
                     path: '/',  // Cookie is available only for URLs starting with /user
                     maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
                 }).send('ok')
@@ -76,7 +76,7 @@ app.post('/login', async (req, res) => {
                     domain:'localhost',
                     httpOnly: false,
                     secure: true,
-                    sameSite: 'None',
+                    sameSite: 'none',
                     path: '/',  // Cookie is available only for URLs starting with /user
                 }).send('ok')
             }
