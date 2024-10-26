@@ -62,19 +62,10 @@ app.post('/login', async (req, res) => {
         if (isMatch) {
             let token = jwt.sign(email, process.env.JWT_SECRET)
             if (remember == "remember") {
-                return res.cookie('token', token, {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'none',
-                    maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
-                }).send('ok').status(200)
+                return res.send(token).status(200)
             }
             else {
-                return res.cookie('token', token, {
-                    httpOnly: false,
-                    secure: true,
-                    sameSite: 'none',
-                }).send('ok').status(200)
+                return res.send(token).status(200)
             }
         }
         else {
