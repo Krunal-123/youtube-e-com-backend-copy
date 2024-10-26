@@ -63,21 +63,17 @@ app.post('/login', async (req, res) => {
             let token = jwt.sign(email, process.env.JWT_SECRET)
             if (remember == "remember") {
                 return res.cookie('token', token, {
-                    domain:'localhost',
                     httpOnly: false,
                     secure: true,
                     sameSite: 'none',
-                    path: '/',  // Cookie is available only for URLs starting with /user
                     maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
                 }).send('ok')
             }
             else {
                 return res.cookie('token', token, {
-                    domain:'localhost',
                     httpOnly: false,
                     secure: true,
                     sameSite: 'none',
-                    path: '/',  // Cookie is available only for URLs starting with /user
                 }).send('ok')
             }
         }
