@@ -67,14 +67,14 @@ app.post('/login', async (req, res) => {
                     secure: true,
                     sameSite: 'none',
                     maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
-                }).send('ok')
+                }).send('ok').status(200)
             }
             else {
                 return res.cookie('token', token, {
                     httpOnly: false,
                     secure: true,
                     sameSite: 'none',
-                }).send('ok')
+                }).send('ok').status(200)
             }
         }
         else {
