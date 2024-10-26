@@ -60,7 +60,7 @@ app.post('/login', async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, User.password);
         if (isMatch) {
-            const token = jwt.sign({ email }, process.env.JWT_SECRET);
+            const token = jwt.sign(email, process.env.JWT_SECRET);
 
             const cookieOptions = {
                 maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
