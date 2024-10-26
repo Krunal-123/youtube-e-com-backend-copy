@@ -1,17 +1,17 @@
-const mongoose=require('mongoose')
-const express=require('express')
-const app=express()
-const user=require('./models/user')
-const cards=require("./models/cards")
-const UserDetails=require("./models/UserDetails")
-const cors=require('cors')
-const bcrypt=require('bcrypt')
-const jwt=require('jsonwebtoken')
+const mongoose = require('mongoose')
+const express = require('express')
+const app = express()
+const user = require('./models/user')
+const cards = require("./models/cards")
+const UserDetails = require("./models/UserDetails")
+const cors = require('cors')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 require("dotenv").config();
 const Razorpay = require("razorpay");
 const sendOtpEmail = require('./mailer');
-const signupMail =require('./SignupMail')
+const signupMail = require('./SignupMail')
 
 app.use(cors({
     origin: ['http://localhost:5173'], // Change to your frontend URL
@@ -24,8 +24,8 @@ app.use(cookieParser());
 
 async function main() {
     await mongoose.connect(process.env.DB)
-      .then(() => console.log("Connected to database"))
-      .catch((err) => console.log("Connection failed", err));
+        .then(() => console.log("Connected to database"))
+        .catch((err) => console.log("Connection failed", err));
 }
 main();
 
@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
                 maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
             };
 
-            res.cookie('token', token, cookieOptions).send('ok');
+            res.cookie('token', token).send('ok');
         } else {
             res.status(401).send('Invalid credentials');
         }
