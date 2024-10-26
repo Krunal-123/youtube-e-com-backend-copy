@@ -60,15 +60,29 @@ app.post('/login', async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, User.password);
         if (isMatch) {
-            const token = jwt.sign(email, process.env.JWT_SECRET);
-
-            const cookieOptions = {
-                maxAge: remember === 'remember' ? 28 * 24 * 60 * 60 * 1000 : undefined, // 28 days
-            };
-
-            res.cookie('token', token).send('ok');
-        } else {
-            res.status(401).send('Invalid credentials');
+            let token = jwt.sign(email, process.env.JWT_SECRET)
+            if (remember == "remember") {
+                return res.cookie('token', token, {
+                    domain:'localhost',
+                    httpOnly: false,
+                    secure: false,
+                    sameSite: 'None',
+                    path: '/',  // Cookie is available only for URLs starting with /user
+                    maxAge: 28 * 60 * 60 * 1000 // 28 day expiration
+                }).send('ok')
+            }
+            else {
+                return res.cookie('token', token, {
+                    domain:'localhost',
+                    httpOnly: false,
+                    secure: false,
+                    sameSite: 'None',
+                    path: '/',  // Cookie is available only for URLs starting with /user
+                }).send('ok')
+            }
+        }
+        else {
+            return res.send('Invalid credentials')
         }
     } catch (error) {
         console.log(error);
